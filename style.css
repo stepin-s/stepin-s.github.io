@@ -1,0 +1,12 @@
+body {
+    padding-top: 56px;
+    padding-bottom: 350px;
+}
+
+.form-small {
+    display: flex;
+}
+
+.my-table th, td {
+    vertical-align: center !important;
+}
