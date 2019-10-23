@@ -63,7 +63,7 @@
         <p>
         
           <form action="templates/request.php" method="POST">
-            <button name="request" type="submit" class="btn btn-outline-info">Request planet list</button></a>
+            <button name="request" type="submit" class="btn btn-outline-info">Request employee list</button></a>
           </form>
           
         </p>
