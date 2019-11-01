@@ -1,20 +1,40 @@
 <?php require "../config_db.php" ?>
 <?php require "header.php" ?>
 
-
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
 <?php
 $keyword = $_GET['search'];
 $city = $_GET['city'];
 $position = $_GET['position'];
+foreach($_GET as $key=>$value){
+    echo $key ."->". $value ;
+}
 
+// Результирующий массив с элементами, выбранными с учётом LIMIT:
+$items    = array();
 
-	
-var_dump($_GET);
-var_dump($city);
-var_dump($position);
+// Число вообще всех элементов ( без LIMIT ) по нужным критериям.
+$allItems = 0;
+
+// HTML - код постраничной навигации.
+$html     = NULL;
+
+// Количество элементов на странице. 
+// В системе оно может определяться например конфигурацией пользователя: 
+$limit    = 5;
+
+// Количество страничек, нужное для отображения полученного числа элементов:
+$pageCount = 0;
+
+// Содержит наш GET-параметр из строки запроса. 
+// У первой страницы его не будет, и нужно будет вместо него подставить 0!!!
+$start    = isset($_GET['start'])   ? intval($_GET['start'])   : 0;
+
+// var_dump($_GET);
+// var_dump($city);
+// var_dump($position);
 if ($city) {
-
     $stmt = $pdo->prepare("SELECT * FROM planets WHERE  location = ?  ORDER BY name");
     $stmt->bindParam(1, $city, PDO::PARAM_STR, 12);
     $stmt->execute();
@@ -30,9 +50,11 @@ if ($city) {
     $stmt->execute();
     $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
-    $sth = $pdo->prepare("SELECT * FROM `planets` ");
+    $sth = $pdo->prepare("SELECT * FROM `planets` LIMIT $start,$limit ");
     $sth->execute();
     $array = $sth->fetchAll(PDO::FETCH_ASSOC);
+    $allItems = $sth->fetch(PDO::FETCH_OBJ)->count;
+    var_dump($sth);
 }
 ?>
 
@@ -136,9 +158,38 @@ if ($city) {
             <?php } ?>
         </tbody>
 
-
     </table>
+
+    <?php
+    $sth = $pdo->prepare("SELECT COUNT(*) as count FROM planets");
+    $sth->execute();
+    $allItems = $sth->fetch(PDO::FETCH_OBJ)->count;
+    $pageCount = ceil( $allItems / $limit);
+    for( $i = 0; $i < $pageCount; $i++ ) {    
+        // Здесь ($i * $limit) - вычисляет нужное для каждой страницы  смещение, 
+        // а ($i + 1) - для того что бы нумерация страниц начиналась с 1, а не с 0
+        $html .= '<li class="page-item"><a class="page-link" href="/templates/request.php?'  . '&start=' . ($i * $limit)  . '">' . ($i + 1)  . '</a></li>';
+    }
+     
+    // Собственно выводим на экран:
+    echo '<ul class="pagination justify-content-end">' . $html . '</ul>';
+    ?>
+
+    <!-- <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-end">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav> -->
 
 
 </div>
+
 <?php require "footer.php" ?>
