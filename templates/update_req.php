@@ -1,5 +1,6 @@
 <?php
-
+ require $_SERVER['DOCUMENT_ROOT'] . "/config_db.php"; 
+ 
   $id = $_POST['id']; 
   $name = $_POST['name'];
   $position = $_POST['position'];
@@ -10,7 +11,7 @@
     exit();
   }
 
-  require $_SERVER['DOCUMENT_ROOT'] . "/config_db.php"; 
+ 
 
   $sql = "UPDATE planets SET name='$name', position='$position', location='$location' WHERE id = '$id'";
   $query = $pdo->prepare($sql);

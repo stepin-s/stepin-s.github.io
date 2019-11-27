@@ -41,8 +41,12 @@
                         <a class="dropdown-item" href="#three">three</a>
                     </div>
                 </li>
-                
-            </ul>
 
+            </ul>
+            <div class="nav-item mr-5">
+                <a class="" href="login.php">
+                    <img width="50px" height="50px" src="/person-logo.svg">
+                </a>
+            </div>
         </div>
     </nav>
