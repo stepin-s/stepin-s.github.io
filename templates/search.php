@@ -3,25 +3,28 @@
 <?php require "header.php" ?>
 
 <?php
-session_start();
 $keyword = $_GET['search'];
-$_SESSION['search']=$keyword ;
+$_SESSION['search'] = $keyword;
 ?> 
 
 <?php
 
 
-$stmt = $pdo->prepare("SELECT * FROM planets WHERE  name LIKE LOWER('%" . $keyword . "%') 
-                       OR position LIKE LOWER('%" . $keyword  . "%') OR location LIKE LOWER('%" . $keyword  . "%')");
-$stmt->execute(array($keyword));
-$stm = $pdo->prepare("INSERT INTO users(keyword) VALUES ('$keyword')");
-$stm->execute();
-foreach ($stmt as $row) {
-    echo $row['name'] . "\n";
-    echo $row['position'] . "\n" . "<br/>";
-    echo $row['location'] . "\n" . "<br/>";
-}
+if (isset($keyword)) {
+    $searched = $_SESSION['search'];
+    $inputLogin = $_SESSION['email'];
 
+    $sql = "UPDATE users SET search_history = '$searched' WHERE email = '$inputLogin'";
+    $query = $pdo->prepare($sql);
+    $query->execute();
+    echo "<br><br>";
+    var_dump($query);
+    echo "<br><br><br>"."Поисковый результат добавлен";
+}
+else{
+    echo "<br><br>"."Поисковый результат НЕ добавлен";
+}
+// exit('<meta http-equiv="refresh" content="0; url=request.php" />');
 
 ?>
 

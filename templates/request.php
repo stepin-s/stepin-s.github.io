@@ -13,41 +13,16 @@ if (isset($_GET['city'])) {
 if (isset($_GET['position'])) {
     $position = $_GET['position'];
 }
+
 $limit    = 100;
-// if (isset($_GET['limit'])) {
-//     $limit = $_GET['limit'];
-// }
-// foreach ($_GET as $key => $value) {
-//     echo $key . "->" . $value;
-// }
-
-// echo http_build_query($_GET);
-$myarr=['limit'=>$_GET['limit']];
+$myarr = ['limit' => $_GET['limit']];
 $limit = $myarr['limit'] ?? 20;
-// $result = array_merge($_GET, $myarr);
-// echo '<br>';
-// echo urldecode(http_build_query($result));
-
-// Результирующий массив с элементами, выбранными с учётом LIMIT:
 $items    = array();
-
-// Число вообще всех элементов ( без LIMIT ) по нужным критериям.
 $allItems = 0;
-
-// HTML - код постраничной навигации.
 $html     = NULL;
-
-
-// Количество страничек, нужное для отображения полученного числа элементов:
 $pageCount = 0;
-
-// Содержит наш GET-параметр из строки запроса. 
-// У первой страницы его не будет, и нужно будет вместо него подставить 0!!!
 $start    = isset($_GET['start'])   ? intval($_GET['start'])   : 0;
 
-// var_dump($_GET);
-// var_dump($city);
-// var_dump($position);
 if ($city) {
     $stmt = $pdo->prepare("SELECT * FROM planets WHERE  location = ?  ORDER BY name LIMIT $start,$limit");
     $stmt->bindParam(1, $city, PDO::PARAM_STR, 12);
@@ -66,6 +41,14 @@ if ($city) {
     $stmt->execute();
     $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $allItems = $stmt->fetch(PDO::FETCH_OBJ)->count;
+
+    $_SESSION['search'] = $keyword;
+    $searched = $_SESSION['search'];
+    $inputLogin = $_SESSION['email'];
+
+    $sql = "UPDATE users SET search_history = '$searched' WHERE id = '$inputLogin'";
+    $query = $pdo->prepare($sql);
+    $query->execute();
 } else {
     $sth = $pdo->prepare("SELECT * FROM `planets`  LIMIT $start,$limit ");
     $sth->execute();
@@ -75,9 +58,8 @@ if ($city) {
 }
 ?>
 
-
-<div class="container my-3">
-    <div class="row">
+<div class="container my-3 ">
+    <div class="row align-items-center">
         <div class="col-8">
             <form action="add.php" method="POST">
                 <div class="align-items-center form-row">
@@ -111,16 +93,31 @@ if ($city) {
                     </div>
                 </div>
             </form>
-            <?php
-            if ($keyword) {
-                echo "По вашему запросу '$keyword' найдено  результатов: ";
-                echo count($array);
-            }
-            ?>
+
+            <form action=" search.php" class="align-items-center form-row">
+                <div class="col-auto ">
+                    <input id="search" name="search" type="hidden" value="<?= $_GET['search'] ?>">
+                    <button class="btn btn-outline-info btn-sm my-2 my-sm-0" type="submit">Save</button>
+                </div>
+                <div class="col-auto ">
+                    <button class="btn btn-outline-secondary btn-sm my-2 my-sm-0" type="submit">Print</button>
+                </div>
+            </form>
 
         </div>
 
+
+
+        <?php
+        if ($keyword) {
+            echo "По вашему запросу '$keyword' найдено  результатов: ";
+            echo count($array);
+        }
+        ?>
+
     </div>
+
+
 
     <table class="my-table table table-hover table-gray my-3">
         <thead>
@@ -194,25 +191,9 @@ if ($city) {
         // а ($i + 1) - для того что бы нумерация страниц начиналась с 1, а не с 0
         $html .= '<li class="page-item"><a class="page-link" href="/templates/request.php?'  . '&start=' . ($i * $limit)  . '">' . ($i + 1)  . '</a></li>';
     }
-
     // Собственно выводим на экран:
     echo '<ul class="pagination justify-content-end">' . $html . '</ul>';
     ?>
-
-    <!-- <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-end">
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#">Next</a>
-            </li>
-        </ul>
-    </nav> -->
-
 
 </div>
 

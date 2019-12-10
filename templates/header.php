@@ -25,7 +25,10 @@
 
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
+                <li class="nav-item">
+                    <a class="nav-link" href="request.php">Employee list</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="feedback.php">Feedback <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
@@ -43,6 +46,24 @@
                 </li>
 
             </ul>
+            <div class="nav-item mr-5 text-white">
+                <?php echo $_SESSION['email'];  ?>
+            </div>
+            <div class="nav-item mr-5">
+                <?php if(isset($_SESSION['email'])){
+                 echo "<br><a href='?is_exit=1'>Выйти</a><br>"; 
+                }
+                    if (isset($_GET["is_exit"])) { //Если нажата кнопка выхода
+                        if ($_GET["is_exit"] == 1) {
+                            $_SESSION = array(); //Очищаем сессию
+                             session_destroy();
+                             exit('<meta http-equiv="refresh" content="0; url=login.php" />'); //Редирект после выхода
+                        }
+                    }
+                    ?>
+
+            </div>
+
             <div class="nav-item mr-5">
                 <a class="" href="login.php">
                     <img width="50px" height="50px" src="/person-logo.svg">

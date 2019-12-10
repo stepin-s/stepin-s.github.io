@@ -28,7 +28,10 @@
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
+        <li class="nav-item">
+          <a class="nav-link" href="request.php">Employee list</a>
+        </li>
+        <li class="nav-item ">
           <a class="nav-link" href="templates/feedback.php">Feedback <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
@@ -61,14 +64,14 @@
       <div class="container">
         <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
         <p>
-        
+
           <form action="templates/request.php" method="POST">
             <button name="request" type="submit" class="btn btn-outline-info">Request employee list</button></a>
           </form>
-          
+
         </p>
 
-      <?php   ?>
+        <?php   ?>
 
 
       </div>

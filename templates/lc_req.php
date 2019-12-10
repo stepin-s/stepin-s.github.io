@@ -1,6 +1,4 @@
-<?php
-session_start();
-require "../config_db.php";
+<?php require "../config_db.php";
 
 $email = $_POST["email"];
 $password = $_POST["password"];
@@ -13,21 +11,16 @@ if (isset($array['email']) & isset($array['password'])) {
         
         $_SESSION['email'] = $array['email'];
         $_SESSION['id'] = $array['id']; 
-        echo $email . " Вы успешно вошли на сайт! <a href='private_office.php'>Личный кабинет</a><br> ";
-        echo "<br><a href='?is_exit=1'>Выйти</a><br>";
-        var_dump($_SESSION['email']);
-        var_dump($_SESSION['id']);
+        echo $email . " Вы успешно вошли на сайт!";
+        echo "<br> Переходим в <a href='private_office.php?'>Личный кабинет..</a>";
     } else {
-        exit("Извините, введённый вами login или пароль неверный.");
+        echo "Извините, введённый вами login или пароль неверный.".'<a href="login.php">Вернуться</a>';
+        exit();
     }
 } else {
     exit("Извините, пользователя с введенным логином не существует.");
 }
-if (isset($_GET["is_exit"])) { //Если нажата кнопка выхода
-    if ($_GET["is_exit"] == 1) {
-        $_SESSION = array(); //Очищаем сессию
-         session_destroy();
-         exit('<meta http-equiv="refresh" content="0; url=login.php" />'); //Редирект после выхода
-    }
-}
+
+exit('<meta http-equiv="refresh" content="2; url=private_office.php" />');
+
 ?>
