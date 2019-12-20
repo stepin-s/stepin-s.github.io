@@ -21,7 +21,13 @@ if (isset($_SESSION['email'])) {
 
 <div class="d-flex flex-column mx-auto ">
   <?php
+  
   print("Количество посещений: " . $visit_count);
+  
+  $d = getdate(); // использовано текущее время
+  foreach ( $d as $key => $val ){};
+  echo "<br>";
+  echo "<hr>Сейчас: $d[mday].$d[mon].$d[year]  $d[hours]:$d[minutes]";
   ?>
   <form class="form-signin " action="lc_req.php" method="POST">
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>

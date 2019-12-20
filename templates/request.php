@@ -14,9 +14,14 @@ if (isset($_GET['position'])) {
     $position = $_GET['position'];
 }
 
-$limit    = 100;
+
+if (isset($_GET['limit'])) {
+    $limit = $_GET['limit'];
+} else {
+    $limit = $myarr['limit'] ?? 8;
+}
+
 $myarr = ['limit' => $_GET['limit']];
-$limit = $myarr['limit'] ?? 20;
 $items    = array();
 $allItems = 0;
 $html     = NULL;
@@ -45,16 +50,12 @@ if ($city) {
     $_SESSION['search'] = $keyword;
     $searched = $_SESSION['search'];
     $inputLogin = $_SESSION['email'];
-
-    $sql = "UPDATE users SET search_history = '$searched' WHERE id = '$inputLogin'";
-    $query = $pdo->prepare($sql);
-    $query->execute();
+    $user_id = $_SESSION['id'];
 } else {
     $sth = $pdo->prepare("SELECT * FROM `planets`  LIMIT $start,$limit ");
     $sth->execute();
     $array = $sth->fetchAll(PDO::FETCH_ASSOC);
     $allItems = $sth->fetch(PDO::FETCH_OBJ)->count;
-    // var_dump($sth);
 }
 ?>
 
@@ -100,7 +101,7 @@ if ($city) {
                     <button class="btn btn-outline-info btn-sm my-2 my-sm-0" type="submit">Save</button>
                 </div>
                 <div class="col-auto ">
-                    <button class="btn btn-outline-secondary btn-sm my-2 my-sm-0" type="submit">Print</button>
+                    <button class="btn btn-outline-secondary btn-sm my-2 my-sm-0" type="reset">Print</button>
                 </div>
             </form>
 
@@ -165,11 +166,16 @@ if ($city) {
 
                             <form action="update.php" method="GET">
                                 <input name="id" type="hidden" value="<?php echo $row['id'] ?>">
-                                <button name="submit" type="submit" class="mr-5 btn btn-outline-dark btn-sm">Изменить</button></a>
+                                <button name="submit" type="submit" class="mr-3 btn btn-outline-dark btn-sm">Изменить</button></a>
                             </form>
 
                             <form action="delete.php?id=<?php echo $row['id'] ?>" method="POST">
-                                <button name="submit" type="submit" class="btn btn-outline-dark btn-sm">Удалить</button></a>
+                                <button name="submit" type="submit" class="mr-3 btn btn-outline-dark btn-sm">Удалить</button></a>
+                            </form>
+
+                            <form action="weather.php" method="GET">
+                                <input name="cityid" type="hidden" value="<?php echo $row['location'] ?>">
+                                <button name="submit" type="submit" class="btn btn-outline-dark btn-sm">Чекнуть погодку</button></a>
                             </form>
                         </div>
 

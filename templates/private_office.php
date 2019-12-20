@@ -515,24 +515,21 @@
             </button>
           </div>
         </div>
-        <div> <p>Some search history:</p>
+        <div>
+          <p>Some search history:</p>
           <?php
-          $stmt = $pdo->prepare('SELECT search_history FROM users WHERE  email = ?');
-          $stmt->bindParam(1, $_SESSION['email'], PDO::PARAM_STR, 12);
+          $stmt = $pdo->prepare('SELECT * FROM search WHERE  user_id = ?');
+          $stmt->bindParam(1, $_SESSION['id'], PDO::PARAM_STR, 12);
           $stmt->execute();
           $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
-          foreach ($array as $row){
-            echo "<a href=\"request.php?search={$row['search_history']}\">";
+          foreach ($array as $row) {
+            $time = $row['user_search_date'];
+            echo "<a href=\"request.php?search={$row['user_search']}\">$row[user_search]</a>";
+            echo  "&nbsp;".date('H:i:s Y-m-d', $time );
+            echo "<br>";
           }
-          
           ?>
         </div>
-
-
-
-        /* <canvas class="my-4 w-100 chartjs-render-monitor" id="myChart" width="2970" height="1254" style="display: block; width: 1485px; height: 627px;">
-          <div> </div>
-        </canvas> */
       </main>
     </div>
   </div>
