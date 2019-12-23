@@ -2,12 +2,13 @@
 
 $email = $_POST["email"];
 $password = $_POST["password"];
+$md5pass = md5($password);
 $sql = "SELECT * FROM users WHERE email='$email'"; 
 $query = $pdo->prepare($sql);
 $query->execute();
 $array = $query->fetchAll(PDO::FETCH_ASSOC)[0];
 if (isset($array['email']) & isset($array['password'])) {
-    if ($array['email'] == $email & $array['password'] == $password) {
+    if ($array['email'] == $email & $array['password'] === $md5pass) {
         
         $_SESSION['email'] = $array['email'];
         $_SESSION['id'] = $array['id']; 

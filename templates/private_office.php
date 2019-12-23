@@ -516,7 +516,7 @@
           </div>
         </div>
         <div>
-          <p>Some search history:</p>
+          <p>История поиска:</p>
           <?php
           $stmt = $pdo->prepare('SELECT * FROM search WHERE  user_id = ?');
           $stmt->bindParam(1, $_SESSION['id'], PDO::PARAM_STR, 12);
@@ -525,10 +525,23 @@
           foreach ($array as $row) {
             $time = $row['user_search_date'];
             echo "<a href=\"request.php?search={$row['user_search']}\">$row[user_search]</a>";
-            echo  "&nbsp;".date('H:i:s Y-m-d', $time );
+            echo  "&nbsp;" . date('H:i:s Y-m-d', $time);
             echo "<br>";
           }
           ?>
+
+          <br><br>
+          <p>Дата регистрации: </p>
+          <?php
+          $stm = $pdo->prepare('SELECT * FROM users WHERE id = ?');
+          $stm->bindParam(1, $_SESSION['id'], PDO::PARAM_STR, 12);
+          $stm->execute();
+          $array = $stm->fetchAll(PDO::FETCH_ASSOC);
+          foreach ($array as $row){};
+          $d = (int)$row['date']; 
+          echo date('H:i:s Y-m-d', $d);
+          ?>
+          
         </div>
       </main>
     </div>

@@ -23,12 +23,13 @@ if (isset($keyword) and !empty($keyword)) {
     // $query = $pdo->prepare($sql);
     // $query->execute();
 
-    $sql = $pdo->prepare("SELECT user_search FROM search WHERE user_search = :searched");
-    $sql->execute(array(":searched" => $searched));
+    $sql = $pdo->prepare("SELECT user_search FROM search WHERE user_search = :searched and user_id = :user_id");
+    $sql->execute(array(":searched" => $searched, ":user_id" => $user_id));
     echo "<br>";
     // $sql->rowCount() > 0
     if ($row == $sql->fetch(PDO::FETCH_OBJ)) {
         $stmt = "INSERT INTO search(user_id, user_search, user_search_date) VALUES (:id, :search, :date)";
+        
         $stm = $pdo->prepare($stmt);
         $stm->execute(['id' => $user_id, 'search' => $searched, 'date' => $date]);
         echo "<br>" . 'Поисковый результат "' . $searched . '" добавлен' . ' <a href="request.php">Назад </a>';
